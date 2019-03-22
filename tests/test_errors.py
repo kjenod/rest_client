@@ -27,36 +27,24 @@ http://opensource.org/licenses/BSD-3-Clause
 
 Details on EUROCONTROL: http://www.eurocontrol.int
 """
-from __future__ import annotations
-import typing as t
+from unittest.mock import Mock
 
-from rest_client.typing import Response
+import pytest
+
+from rest_client.errors import APIError
 
 __author__ = "EUROCONTROL (SWIM)"
 
+def test_apierror_from_response():
+    detail = 'some_error'
+    status_code = 400
 
-class APIError(Exception):
+    response = Mock()
+    response.json = Mock(return_value={'detail': detail})
+    response.status_code = status_code
 
-    def __init__(self, detail: str, status_code: int) -> None:
-        self.detail: str = detail
-        self.status_code: int = status_code
+    api_error = APIError.from_response(response)
 
-    @classmethod
-    def from_response(cls, response: t.Type[Response]) -> APIError:
-        """
-        Creates an APIError instance with error data extracted from the response
-        :param response:
-        :return:
-        """
-        try:
-            error_data = response.json()
-        except ValueError:
-            error_data = dict()
-
-        detail = error_data.get('detail')
-
-        return cls(detail=detail, status_code=response.status_code)
-
-    def __str__(self):
-        return f"[{self.status_code}] - {self.detail}"
-
+    assert api_error.detail == detail
+    assert api_error.status_code == status_code
+    assert f"[{status_code}] - {detail}" == str(api_error)
