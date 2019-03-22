@@ -1,0 +1,7 @@
+name: rest-client
+dependencies:
+  - python
+  - pytest
+  - pytest-cov
+  - pip:
+      - requests
