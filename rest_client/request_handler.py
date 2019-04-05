@@ -59,7 +59,7 @@ class RequestHandler:
 
         self.timeout = timeout
         self.auth = auth or ()
-        self._request_handler = request_handler_maker() if request_handler_maker else requests.session()
+        self._request_handler = request_handler_maker() if request_handler_maker else requests.sessions.Session()
         self._base_url = RequestHandler._URL_BASE_FORMAT.format(host=host, scheme='https' if https else 'http')
 
     def get(self,
@@ -133,5 +133,8 @@ class RequestHandler:
 
         if "timeout" not in kwargs:
             kwargs["timeout"] = self.timeout
+
+        if "auth" not in kwargs:
+            kwargs["auth"] = self.auth
 
         return request_method(url, **kwargs)
