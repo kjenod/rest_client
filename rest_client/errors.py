@@ -53,7 +53,11 @@ class APIError(Exception):
         except ValueError:
             error_data = dict()
 
-        detail = error_data.get('detail')
+        # case of APIs which return 404 for empty list
+        if error_data == []:
+            error_data = dict()
+
+        detail = error_data.get('detail', "no description")
 
         return cls(detail=detail, status_code=response.status_code)
 

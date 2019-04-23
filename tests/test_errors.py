@@ -48,3 +48,18 @@ def test_apierror_from_response():
     assert api_error.detail == detail
     assert api_error.status_code == status_code
     assert f"[{status_code}] - {detail}" == str(api_error)
+
+
+def test_api_error_from_response__empty_list_for_404_error_is_ignored():
+    status_code = 404
+
+    response = Mock()
+    response.json = Mock(return_value=[])
+    response.status_code = status_code
+
+    api_error = APIError.from_response(response)
+
+    expected_detail = "no description"
+    assert expected_detail == api_error.detail
+    assert status_code == api_error.status_code
+    assert f"[{status_code}] - {expected_detail}" == str(api_error)
