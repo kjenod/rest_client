@@ -45,6 +45,7 @@ class ClientFactory:
                timeout: t.Optional[int] = None,
                username: t.Optional[str] = None,
                password: t.Optional[str] = None,
+               verify: t.Optional[t.Union[bool, str]] = True,
                **kwargs: str) -> t.Type[RestClient]:
         """
         To be used from a REST client class that inherits from ClientFactory. The returned class will be an instance of
@@ -60,6 +61,6 @@ class ClientFactory:
         """
         auth = (username, password) if username and password else None
 
-        request_handler = RequestHandler(host=host, https=https, timeout=timeout, auth=auth)
+        request_handler = RequestHandler(host=host, https=https, timeout=timeout, auth=auth, verify=verify)
 
         return cls(request_handler, **kwargs)
