@@ -48,6 +48,7 @@ class RequestHandler:
                  https: bool = True,
                  timeout: int = 30,
                  auth: t.Optional[tuple] = None,
+                 verify: t.Optional[t.Union[bool, str]] = True,
                  request_handler_maker: t.Optional[t.Callable] = None) -> None:
         """
         :param host: The host of the service to be accessed via the client
@@ -57,9 +58,11 @@ class RequestHandler:
         :param request_handler_maker: a callback which instantiates a custom request handler
         """
 
-        self.timeout = timeout
-        self.auth = auth or ()
+        self._timeout = timeout
         self._request_handler = request_handler_maker() if request_handler_maker else requests.sessions.Session()
+        self._request_handler.auth = auth
+        self._request_handler.verify = verify
+
         self._base_url = RequestHandler._URL_BASE_FORMAT.format(host=host, scheme='https' if https else 'http')
 
     def get(self,
@@ -132,9 +135,6 @@ class RequestHandler:
         url: str = self._base_url + url
 
         if "timeout" not in kwargs:
-            kwargs["timeout"] = self.timeout
-
-        if "auth" not in kwargs:
-            kwargs["auth"] = self.auth
+            kwargs["timeout"] = self._timeout
 
         return request_method(url, **kwargs)
