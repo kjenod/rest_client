@@ -67,7 +67,6 @@ def test_get_delete_methods__correct_url_was_used(method, host, https, endpoint_
 
     url = mock_method.call_args[0][0]
     assert expected_url == url
-    # mock_method.assert_called_once_with(expected_url, params=None, timeout=timeout)
 
     assert response == "data"
 
@@ -102,8 +101,7 @@ def test_post_put_extra_parameters(method, endpoint_url, data, json, kwargs):
 
     response = getattr(client, method)(endpoint_url, data=data, json=json, **kwargs)
 
-    getattr(mock_client, method).assert_called_once_with(expected_url, auth=(), data=data, json=json, timeout=10,
-                                                         **kwargs)
+    getattr(mock_client, method).assert_called_once_with(expected_url, data=data, json=json, timeout=10, **kwargs)
 
     assert response == "data"
 
@@ -129,6 +127,6 @@ def test_get_delete__extra_parameters(method, endpoint_url, params, kwargs):
 
     response = getattr(client, method)(endpoint_url, params=params, **kwargs)
 
-    getattr(mock_client, method).assert_called_once_with(expected_url, auth=(), params=params, timeout=10, **kwargs)
+    getattr(mock_client, method).assert_called_once_with(expected_url, params=params, timeout=10, **kwargs)
 
     assert response == "data"

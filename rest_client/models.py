@@ -27,7 +27,6 @@ http://opensource.org/licenses/BSD-3-Clause
 
 Details on EUROCONTROL: http://www.eurocontrol.int
 """
-from __future__ import annotations
 from typing import Any
 
 from rest_client.typing import JSONType
@@ -46,11 +45,12 @@ class BaseModel:
         return not other == self
 
     @classmethod
-    def from_json(self, object_dict: JSONType) -> BaseModel:
+    def from_json(self, object_dict: JSONType):
         """
         Will be used upon deserialization of the incoming data
 
         :param object_dict:
+        :return: BaseModel
         """
         pass
 

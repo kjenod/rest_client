@@ -59,7 +59,7 @@ class ClientFactory:
         :param kwargs: optional arguments
         :return: an instance of a REST client that will inherit from ClientFactory
         """
-        auth = (username, password) if username and password else None
+        auth = (username, password) if username and password else ()
 
         request_handler = RequestHandler(host=host, https=https, timeout=timeout, auth=auth, verify=verify)
 
