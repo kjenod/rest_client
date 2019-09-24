@@ -29,11 +29,10 @@ Details on EUROCONTROL: http://www.eurocontrol.int
 """
 from unittest.mock import Mock
 
-import pytest
-
 from rest_client.errors import APIError
 
 __author__ = "EUROCONTROL (SWIM)"
+
 
 def test_apierror_from_response():
     detail = 'some_error'
@@ -56,10 +55,11 @@ def test_api_error_from_response__empty_list_for_404_error_is_ignored():
     response = Mock()
     response.json = Mock(return_value=[])
     response.status_code = status_code
+    response.text = ""
 
     api_error = APIError.from_response(response)
 
-    expected_detail = "no description"
+    expected_detail = ""
     assert expected_detail == api_error.detail
     assert status_code == api_error.status_code
     assert f"[{status_code}] - {expected_detail}" == str(api_error)

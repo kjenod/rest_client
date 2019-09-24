@@ -48,15 +48,10 @@ class APIError(Exception):
         :return: APIError
         """
         try:
-            error_data = response.json()
-        except ValueError:
-            error_data = dict()
-
-        # case of APIs which return 404 for empty list
-        if error_data == []:
-            error_data = dict()
-
-        detail = error_data.get('detail', "no description")
+            response_json = response.json()
+            detail = response_json.get('detail')
+        except (ValueError, AttributeError):
+            detail = response.text
 
         return cls(detail=detail, status_code=response.status_code)
 
