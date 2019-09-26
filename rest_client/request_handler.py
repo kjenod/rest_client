@@ -30,6 +30,8 @@ Details on EUROCONTROL: http://www.eurocontrol.int
 import typing as t
 
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 from rest_client.typing import RequestParams, Response
 
@@ -49,6 +51,7 @@ class RequestHandler:
                  timeout: int = 30,
                  auth: t.Optional[tuple] = None,
                  verify: t.Optional[t.Union[bool, str]] = True,
+                 retry: t.Optional[t.Union[int, None]] = None,
                  request_handler_maker: t.Optional[t.Callable] = None) -> None:
         """
         :param host: The host of the service to be accessed via the client
@@ -62,8 +65,13 @@ class RequestHandler:
         self._request_handler = request_handler_maker() if request_handler_maker else requests.sessions.Session()
         self._request_handler.auth = auth
         self._request_handler.verify = verify
+        self._scheme = 'https' if https else 'http'
 
-        self._base_url = RequestHandler._URL_BASE_FORMAT.format(host=host, scheme='https' if https else 'http')
+        if retry:
+            retries = Retry(total=retry, backoff_factor=1, status_forcelist=[502, 503, 504])
+            self._request_handler.mount(f'{self._scheme}://', HTTPAdapter(max_retries=retries))
+
+        self._base_url = RequestHandler._URL_BASE_FORMAT.format(host=host, scheme=self._scheme)
 
     def get(self,
             url: str,

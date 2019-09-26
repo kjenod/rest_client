@@ -46,21 +46,26 @@ class ClientFactory:
                username: t.Optional[str] = None,
                password: t.Optional[str] = None,
                verify: t.Optional[t.Union[bool, str]] = True,
+               retry: t.Optional[t.Union[int, None]] = None,
                **kwargs: str) -> t.Type[RestClient]:
         """
         To be used from a REST client class that inherits from ClientFactory. The returned class will be an instance of
         the REST client class.
 
+        :return:
         :param host: the host provider of the API
         :param https: indicates whether the host serves over TSL or not
+        :param timeout: How many seconds to wait for the server to send data before giving up
         :param username: username for basic authentication
         :param password: password for basic authentication
-        :param timeout: How many seconds to wait for the server to send data before giving up
+        :param verify:
+        :param retry: amount of times to retry to connect to the server in case of ConnectionError. If None no retry will
+                      take place
         :param kwargs: optional arguments
         :return: an instance of a REST client that will inherit from ClientFactory
         """
         auth = (username, password) if username and password else ()
 
-        request_handler = RequestHandler(host=host, https=https, timeout=timeout, auth=auth, verify=verify)
+        request_handler = RequestHandler(host=host, https=https, timeout=timeout, auth=auth, verify=verify, retry=retry)
 
         return cls(request_handler, **kwargs)
