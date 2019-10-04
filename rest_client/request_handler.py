@@ -50,6 +50,7 @@ class RequestHandler:
                  https: bool = True,
                  timeout: int = 30,
                  auth: t.Optional[tuple] = None,
+                 cert: t.Optional[t.Union[str, t.Tuple[str, str]]] = None,
                  verify: t.Optional[t.Union[bool, str]] = True,
                  retry: t.Optional[t.Union[int, None]] = None,
                  request_handler_maker: t.Optional[t.Callable] = None) -> None:
@@ -57,13 +58,17 @@ class RequestHandler:
         :param host: The host of the service to be accessed via the client
         :param https: indicates whether the host serves over TSL or not
         :param auth: pair of username and password
+        :param cert: SSL client certificate
+        :param verify: SSL Verification
         :param timeout: How many seconds to wait for the server to send data before giving up
+        :param retry: how many times it will retry the request in case of connection error
         :param request_handler_maker: a callback which instantiates a custom request handler
         """
 
         self._timeout = timeout
         self._request_handler = request_handler_maker() if request_handler_maker else requests.sessions.Session()
         self._request_handler.auth = auth
+        self._request_handler.cert = cert
         self._request_handler.verify = verify
         self._scheme = 'https' if https else 'http'
 
