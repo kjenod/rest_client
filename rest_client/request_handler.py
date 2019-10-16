@@ -32,7 +32,7 @@ import typing as t
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-
+from urllib3.util.retry import Retry
 from rest_client.typing import RequestParams, Response
 
 __author__ = "EUROCONTROL (SWIM)"
@@ -73,7 +73,7 @@ class RequestHandler:
         self._scheme = 'https' if https else 'http'
 
         if retry:
-            retries = Retry(total=retry, backoff_factor=1, status_forcelist=[502, 503, 504])
+            retries = Retry(total=retry, backoff_factor=0.1, status_forcelist=[502, 503, 504])
             self._request_handler.mount(f'{self._scheme}://', HTTPAdapter(max_retries=retries))
 
         self._base_url = RequestHandler._URL_BASE_FORMAT.format(host=host, scheme=self._scheme)

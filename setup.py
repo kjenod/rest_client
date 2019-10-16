@@ -33,7 +33,7 @@ __author__ = 'EUROCONTROL (SWIM)'
 
 setup(
     name='rest-client',
-    version='0.0.9',
+    version='0.1.0',
     description='REST Client common functionalities',
     author='EUROCONTROL (SWIM)',
     author_email='',
