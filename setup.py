@@ -33,12 +33,12 @@ __author__ = 'EUROCONTROL (SWIM)'
 
 setup(
     name='rest-client',
-    version='0.1.0',
+    version='0.1.1',
     description='REST Client common functionalities',
     author='EUROCONTROL (SWIM)',
     author_email='',
     packages=find_packages(exclude=['tests']),
-    url='https://bitbucket.org/antavelos-eurocontrol/rest-client',
+    url='https://github.com/eurocontrol-swim/rest-client',
     install_requires=[
         'requests'
     ],
