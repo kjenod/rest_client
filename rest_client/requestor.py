@@ -92,7 +92,7 @@ class Requestor:
         self._check_status_code(response)
 
         response_data = response.json() if len(response.content) > 0 else None
-
+        print ("-------------------------- response_data " ,response_data)
         if response_class and response_data:
             if many:
                 response_data = (response_class.from_json(r) for r in response_data)
